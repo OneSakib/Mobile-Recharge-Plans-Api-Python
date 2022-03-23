@@ -16,14 +16,17 @@ class MobileRecharge:
             recharge = self.soup.find('ul', attrs={'aria-labelledby': 'rechargeoptions'})
             self.plans = {item.text: item['href'] for item in recharge.findAll('a')}
         except Exception as e:
-            pass
+            print(e)
 
-    def get_data(self, circle='andhra-pradesh', operator='airtel'):
+    def get_data(self, circle='andhra-pradesh', operator='airtel',plan=''):
         datas = []
         temp = []
         try:
             for i in range(1, 1000):
-                url = f"https://telecom.economictimes.indiatimes.com/recharge-plans/{circle}/{operator}/{i}"
+                if plan=="":
+                    url = f"https://telecom.economictimes.indiatimes.com/recharge-plans/{circle}/{operator}/{i}"
+                else:
+                    url = f"https://telecom.economictimes.indiatimes.com/recharge-plans/{circle}/{plan}-{operator}/{i}"    
                 r = requests.get(url)
                 soup = BeautifulSoup(r.content, 'html5lib')
                 all = soup.find('div', attrs={'class': 'tbl_outr'})
@@ -39,8 +42,6 @@ class MobileRecharge:
 
             return {'circle': self.circle, 'operator': self.operator, 'plans': self.plans, 'data': datas}
         except Exception as e:
+            print(e)
             return {'circle': None, 'operator': None, 'plans': None, 'data': None}
 
-
-mob = MobileRecharge()
-dict = mob.get_data(circle='asaam')
