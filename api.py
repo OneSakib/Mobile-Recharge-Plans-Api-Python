@@ -9,8 +9,9 @@ class MobileRecharge:
         r = requests.get(self.url)
         try:
             self.soup = BeautifulSoup(r.content, 'html5lib')
-            circle = self.soup.find('ul', attrs={'aria-labelledby': 'circleoptions'})
-            self.circle = {item.text: item['href'] for item in circle.findAll('a')}
+            # circle = self.soup.find('ul', attrs={'aria-labelledby': 'circleoptions'})
+            # self.circle = {item.text: item['href'] for item in circle.findAll('a')}
+            self.circle=['all','andhra-pradesh','assam','bihar-jharkhand','chennai','delhi','gujrat','haryana','himachal-pradesh','jammu-kashmir','karnataka','kerala','kolkata','madhya-pradesh','maharashtra','mumbai','north-est','odisha','punjab','rajasthan','tamil-nadu','uttar-pradesh-east','uttar-pradesh-west','west-bengal']
             operator = self.soup.find('ul', attrs={'aria-labelledby': 'operatorptions'})
             self.operator = {item.text: item['href'] for item in operator.findAll('a')}
             recharge = self.soup.find('ul', attrs={'aria-labelledby': 'rechargeoptions'})
@@ -39,7 +40,8 @@ class MobileRecharge:
                             temp.append(td.text)
                         datas.append(temp.copy())
                         temp.clear()
-
+            self.operator=[item.lower() for item in list(self.operator)]
+            self.operator[0]='all'
             return {'circle': self.circle, 'operator': self.operator, 'plans': self.plans, 'data': datas}
         except Exception as e:
             print(e)
