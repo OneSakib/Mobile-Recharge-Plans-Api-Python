@@ -5,19 +5,10 @@ from bs4 import BeautifulSoup
 
 class MobileRecharge:
     def __init__(self):
-        self.url = "https://telecom.economictimes.indiatimes.com/recharge-plans/"
-        r = requests.get(self.url)
-        try:
-            self.soup = BeautifulSoup(r.content, 'html5lib')
-            # circle = self.soup.find('ul', attrs={'aria-labelledby': 'circleoptions'})
-            # self.circle = {item.text: item['href'] for item in circle.findAll('a')}
-            self.circle=['all','andhra-pradesh','assam','bihar-jharkhand','chennai','delhi','gujrat','haryana','himachal-pradesh','jammu-kashmir','karnataka','kerala','kolkata','madhya-pradesh','maharashtra','mumbai','north-est','odisha','punjab','rajasthan','tamil-nadu','uttar-pradesh-east','uttar-pradesh-west','west-bengal']
-            operator = self.soup.find('ul', attrs={'aria-labelledby': 'operatorptions'})
-            self.operator = {item.text: item['href'] for item in operator.findAll('a')}
-            recharge = self.soup.find('ul', attrs={'aria-labelledby': 'rechargeoptions'})
-            self.plans = {item.text: item['href'] for item in recharge.findAll('a')}
-        except Exception as e:
-            print(e)
+        self.circle={'--ALL--':'all','Andhra Pradesh':'andhra-pradesh','Assam':'assam','Bihar-Jharkhand':'bihar-jharkhand','Chennai':'chennai','Delhi NCR':'delhi','Gujrat':'gujrat','Haryana':'haryana','Himachal Pradesh':'himachal-pradesh','Jammu Kashmir':'jammu-kashmir','Karnataka':'karnataka','Kerala':'kerala','Kolkata':'kolkata','Madhya Pradesh Chattisgarh':'madhya-pradesh','Maharashtra':'maharashtra','Mumbai':'mumbai','North East':'north-east','Odisha':'odisha','Punjab':'punjab','Rajasthan':'rajasthan','Tamil Nadu':'tamil-nadu','UP East':'uttar-pradesh-east','UP West':'uttar-pradesh-west','West Bengal':'west-bengal'}
+        self.operator={'--ALL--':'all','Airtel':'airtel','BSNL':'bsnl','Jio':'reliance-jio','MTNL':'mtnl','VI':'vi'}
+        self.plans={'--ALL--':'','2G Data':'2g-data-plans','3G Data':'3g-data-plans','4G Data':'4g-data-plans','Full Talktime':'full-talktime-plans','ISD':'isd-plans','Local':'local-plans','Other':'other-plans','SMS':'sms-plans','STD':'std-plans','Top Up ':'top-up-plans'}       
+
 
     def get_data(self, circle='andhra-pradesh', operator='airtel',plan=''):
         datas = []
@@ -40,10 +31,8 @@ class MobileRecharge:
                             temp.append(td.text)
                         datas.append(temp.copy())
                         temp.clear()
-            self.operator=[item.lower() for item in list(self.operator)]
-            self.operator[0]='all'
+           
             return {'circle': self.circle, 'operator': self.operator, 'plans': self.plans, 'data': datas}
         except Exception as e:
             print(e)
             return {'circle': None, 'operator': None, 'plans': None, 'data': None}
-
